@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ledger-core-api
+  description: "Core bancário para registro de extratos"
+  annotations:
+    github.com/project-slug: emanueldeveloper82/ledger-core-api
+spec:
+  type: service
+  lifecycle: production
+  owner: group:conta-corrente
+  system: system:ledger-core
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ledger-api
+spec:
+  type: graphql
+  lifecycle: production
+  owner: group:conta-corrente
+  definition: "type Query { account(id: ID!): Float }"
