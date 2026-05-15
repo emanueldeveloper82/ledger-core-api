@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  title: Ledger Core API
+  description: API de core bancário para consultas de saldo, transações e extratos
+  version: 1.0.0
+  contact:
+    name: Equipe Conta Corrente
+    email: conta-corrente@zetra-bank.com
+
+servers:
+  - url: https://api.zetra-bank.com/ledger
+    description: Production
+
+paths:
+  /accounts/{accountId}/balance:
+    get:
+      summary: Consultar saldo disponível
+      operationId: getAccountBalance
+      tags:
+        - Accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Saldo da conta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accountId:
+                    type: string
+                  balance:
+                    type: number
+                  availableBalance:
+                    type: number
+                  blockedAmount:
+                    type: number
+                  lastUpdate:
+                    type: string
+                    format: date-time
+
+  /accounts/{accountId}/transactions:
+    get:
+      summary: Listar transações da conta
+      operationId: getAccountTransactions
+      tags:
+        - Transactions
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Lista de transações
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    transactionId:
+                      type: string
+                    type:
+                      type: string
+                      enum: [DEBIT, CREDIT]
+                    amount:
+                      type: number
+                    description:
+                      type: string
+                    timestamp:
+                      type: string
+                      format: date-time
+
+  /transactions:
+    post:
+      summary: Registrar nova transação
+      operationId: recordTransaction
+      tags:
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accountId:
+                  type: string
+                type:
+                  type: string
+                  enum: [DEBIT, CREDIT]
+                amount:
+                  type: number
+                description:
+                  type: string
+                reference:
+                  type: string
+      responses:
+        '201':
+          description: Transação registrada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [PENDING, COMPLETED, FAILED]
+
+  /accounts/{accountId}/statement:
+    get:
+      summary: Gerar extrato da conta
+      operationId: getAccountStatement
+      tags:
+        - Statements
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Extrato da conta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accountId:
+                    type: string
+                  period:
+                    type: string
+                  openingBalance:
+                    type: number
+                  closingBalance:
+                    type: number
+                  totalCredits:
+                    type: number
+                  totalDebits:
+                    type: number
+                  transactions:
+                    type: array
+                    items:
+                      type: object
