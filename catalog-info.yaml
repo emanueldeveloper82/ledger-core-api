@@ -15,6 +15,7 @@ apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: ledger-api
+  description: "API GraphQL para consultas de saldo, extratos e histórico de transações de contas correntes"
 spec:
   type: graphql
   lifecycle: production
