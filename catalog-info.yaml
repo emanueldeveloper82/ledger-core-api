@@ -9,7 +9,7 @@ spec:
   type: service
   lifecycle: production
   owner: group:conta-corrente
-  system: system:ledger-core
+  system: system:banking-system
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
