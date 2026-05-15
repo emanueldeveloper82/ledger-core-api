@@ -5,20 +5,25 @@ metadata:
   description: "Core bancário para registro de extratos"
   annotations:
     github.com/project-slug: emanueldeveloper82/ledger-core-api
-    backstage.io/api-docs-ref: file: ./openapi.yaml
 spec:
   type: service
   lifecycle: production
   owner: group:conta-corrente
+  domain: financeiro
   system: system:banking-system
+  providesApis:
+    - ledger-core-api
+
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: ledger-api
-  description: "API GraphQL para consultas de saldo, extratos e histórico de transações de contas correntes"
+  name: ledger-core-api
+  description: "Especificação OpenAPI do Ledger Core API"
 spec:
-  type: graphql
+  type: openapi
   lifecycle: production
   owner: group:conta-corrente
-  definition: "type Query { account(id: ID!): Float }"
+  system: system:banking-system
+  definition:
+    $text: ./openapi.yaml
