@@ -5,6 +5,7 @@ metadata:
   description: "Core bancário para registro de extratos"
   annotations:
     github.com/project-slug: emanueldeveloper82/ledger-core-api
+    backstage.io/api-docs-ref: file: ./openapi.yaml
 spec:
   type: service
   lifecycle: production
